@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'g2'
+
+G2.init

@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "g2"
   spec.version       = G2::VERSION
   spec.authors       = ["lizhe"]
-  spec.email         = ["mark.geek.lee@gmail.com"]
+  spec.email         = ["me@lizhe.name"]
   spec.description   = %q{a tool to help you to manage goliath grape based application}
   spec.summary       = %q{rock with goliath and grape}
   spec.homepage      = "https://github.com/markee/g2"

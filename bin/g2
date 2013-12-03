@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
 
-require 'g2'
-
-G2.init
+require 'g2/cli'
+G2::Cli.start

@@ -1,5 +1,7 @@
 require "zeg/version"
 
 module Zeg
-  # Your code goes here...
+  def self.init
+    puts "init zeg"
+  end
 end

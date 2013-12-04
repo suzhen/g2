@@ -9,9 +9,10 @@ module G2
     desc "new", "create a new grape goliath application"
     def new app_root
       say "create a new grape goliath application named #{app_root}", :green
+      @app_name = app_root.capitalize
 
       # create folder structure
-      %w{app config config/environments db script spec}.each do |item|
+      %w{app app/apis app/helpers app/models config config/environments db script log tmp tmp/pids spec}.each do |item|
         empty_directory app_root + "/" + item
       end
 
@@ -33,7 +34,27 @@ module G2
     end
 
     desc "server", "start goliath server"
+    method_option :port, :aliases => "-p", :desc => "server port"
+    method_option :environment, :aliases => "-e", :desc => "server environment"
+    method_option :pid, :aliases => "-P", :desc => "server pid path"
+    method_option :log, :aliases => "-l", :desc => "server log path"
+    method_option :daemon, :aliases => "-d", :desc => "run server as daemon"
     def server
+      command = "ruby script/server.rb -p #{options[:port] || 3030} -e #{options[:environment] || 'development'}"
+
+      if options[:log]
+        command += " -l #{options[:log]}"
+      else
+        command += " -s"
+      end
+      if options[:pid]
+        command += " -P #{options[:pid]}"
+      end
+      if options[:daemon]
+        command += " -d"
+      end
+
+      exec command
     end
 
     desc "console", "start console"

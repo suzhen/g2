@@ -1,0 +1,35 @@
+app_dir = File.expand_path("../../app", __FILE__)
+
+%w{apis helpers models}.each do |dir|
+  $LOAD_PATH.unshift File.join(app_dir, dir)
+end
+
+$app_resources = { }
+
+[:apis, :helpers, :models].each do |item|
+  $app_resources[item] = []
+
+  Dir.foreach(File.join(app_dir, item.to_s)) do |entry|
+    next if entry == "." || entry == ".."
+    if entry.end_with?("rb")
+      file_name = entry.split(".rb").first.camelize
+      require entry
+
+      $app_resources[item] << file_name.constantize
+    end
+  end
+end
+
+module <%= @app_name %>
+  class Application < Grape::API
+    format :json
+
+    $app_resources[:helpers].each do |helper_item|
+      helper helper_item
+    end
+
+    $app_resources[:apis].each do |api_item|
+      mount api_item
+    end
+  end
+end

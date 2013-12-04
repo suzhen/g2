@@ -1,0 +1,26 @@
+require "rubygems"
+require "bundler/setup"
+require "active_support"
+require 'goliath'
+require 'em-synchrony/activerecord'
+require 'grape'
+
+Goliath::Request.log_block = proc do |env, response, elapsed_time|
+  request_params = env.params.collect { |param| param.join(": ") }
+  method = env[Goliath::Request::REQUEST_METHOD]
+  path = env[Goliath::Request::REQUEST_URI]
+
+  env[Goliath::Request::RACK_LOGGER].info("#{request_params}")
+  env[Goliath::Request::RACK_LOGGER].info("#{response.status} #{method} #{path} in #{'%.2f' % elapsed_time} ms")
+end
+
+require File.expand_path('../../config/application', __FILE__)
+
+class Boot < Goliath::API
+  use Goliath::Rack::Params
+
+  def response(env)
+    <%= @app_name %>::Application.call(env)
+  end
+
+end

@@ -2,3 +2,13 @@ source "http://ruby.taobao.org"
 
 gem 'grape'
 gem 'goliath'
+gem 'em-synchrony'
+
+gem 'activerecord', '~> 4.0.2'
+gem 'mysql2'
+
+group :test do
+  gem 'factory_girl'
+  gem 'rspec'
+  gem 'rack-test', require: 'rack/test'
+end

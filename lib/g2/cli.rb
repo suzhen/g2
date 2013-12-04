@@ -16,13 +16,33 @@ module G2
       end
 
       # create basic files
-      template("templates/application.erb", "#{app_root}/config/application.rb")
-      template("templates/spec_helper.erb", "#{app_root}/spec/spec_helper.rb")
-      template("templates/Gemfile.erb", "#{app_root}/Gemfile")
-      template("templates/Rakefile.erb", "#{app_root}/Rakefile")
-      template("templates/rspec.erb", "#{app_root}/.rspec")
-      template("templates/server.erb", "#{app_root}/script/server.rb")
+      {
+        application: "config/application.rb",
+        spec_helper: "spec/spec_helper.rb",
+        gemfile: "Gemfile",
+        rakefile: "Rakefile",
+        rspec_config: ".rspec",
+        server: "script/server.rb"
+      }.each do |k, v|
+        template("templates/#{k}.erb", "#{app_root}/#{v}")
+      end
+
+      inside app_root do
+        run "bundle install"
+      end
     end
-    
+
+    desc "server", "start goliath server"
+    def server
+    end
+
+    desc "console", "start console"
+    def console
+    end
+
+    desc "generator", "generate files"
+    def generate
+    end
+
   end
 end

@@ -12,7 +12,7 @@ module G2
       @app_name = app_root.capitalize
 
       # create folder structure
-      %w{app app/apis app/helpers app/models config config/environments db script log tmp tmp/pids spec}.each do |item|
+      %w{app app/apis app/helpers app/models config config/environments db script log tmp spec spec/apis spec/models spec/helpers}.each do |item|
         empty_directory app_root + "/" + item
       end
 
@@ -65,9 +65,33 @@ module G2
     end
 
     desc "g", "generate files"
-    def g
-      say "not implemented yet ):", :yellow
+    def g g_type, g_name, *args
+      @class_name = g_name.camelize
+      case g_type
+      when "model"
+        generate_model g_name, args
+      when "migration"
+        generate_migration g_name, args
+      when "api"
+        @resources_symbol = g_name.to_sym
+        generate_api g_name, args
+      else
+        puts "invalid generator type"
+      end
     end
 
+    private
+
+    def generate_model name, *args
+      template "templates/generator/model.erb", File.join('app/models', "#{name}.rb")
+    end
+
+    def generate_migration name, *args
+      template "templates/generator/migration.erb", File.join('db/migrate', "#{Time.now.to_i}_#{name}.rb")
+    end
+
+    def generate_api name, *args
+      template "templates/generator/api.erb", File.join('app/apis', "#{name}_api.rb")
+    end
   end
 end

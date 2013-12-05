@@ -1,0 +1,11 @@
+class <%= @class_name %>Api < Grape::API
+
+  resources <%= @resources_symbol %> do
+
+    get "/" d
+      {name: "<%= @class_name %>"}
+    end
+
+  end
+
+end

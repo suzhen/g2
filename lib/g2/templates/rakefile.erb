@@ -4,14 +4,14 @@ require 'em-synchrony/activerecord'
 require 'yaml'
 
 def db_conf
-  config = YAML.load File.read('config/database.yml')
+  YAML.load File.read('config/database.yml')
 end
 
 namespace :db do
   desc "loads database configuration in for other tasks to run"
   task :load_config do
-    env = ENV["G2_ENV"]
-    ActiveRecord::Base.establish_connection db_conf[env]
+    $env = ENV["G2_ENV"] || "development"
+    ActiveRecord::Base.establish_connection db_conf[$env]
   end
   
   desc "creates and migrates your database"
@@ -21,7 +21,7 @@ namespace :db do
   end
   
   desc "migrate your database"
-  task :migrate do
+  task :migrate => :load_config do
     migration_path = ActiveRecord::Migrator.migrations_paths
     version = ENV["VERSION"] ? ENV["VERSION"].to_i : nil
     ActiveRecord::Migrator.migrate migration_path, version
@@ -29,12 +29,18 @@ namespace :db do
   
   desc 'Drops the database'
   task :drop => :load_config do
-    ActiveRecord::Base.connection.drop_database db_conf[env]['database']
+    ActiveRecord::Base.connection.drop_database db_conf[$env]['database']
+    puts "#{db_conf[$env]['database']} has been dropped"
   end
   
   desc 'Creates the database'
-  task :create => :load_config do
+  task :create do
+    env = ENV["G2_ENV"] || "development"
+    conf = db_conf[env]
+    conf.delete "database"
+    ActiveRecord::Base.establish_connection conf
     ActiveRecord::Base.connection.create_database db_conf[env]['database']
+    puts "#{db_conf[env]['database']} has been created"
   end
   
 end

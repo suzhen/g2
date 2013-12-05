@@ -1,7 +1,7 @@
 db_config = YAML.load_file(G2.config.config_dir + '/database.yml')
 ActiveRecord::Base.establish_connection(db_config[G2.env.to_s])
 
-module Gog2
+module <%= @app_name %>
   class Application < Grape::API
     format :json
 

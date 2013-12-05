@@ -1,5 +1,5 @@
 defaults: &defaults
-  adapter: mysql2
+  adapter: em_mysql2
   encoding: utf8
   pool: 5
   host: localhost
@@ -8,9 +8,9 @@ defaults: &defaults
 
 development:
   <<: *defaults
-  database: <%= @app_name %>_development
+  database: <%= @app_name.downcase %>_development
 
 test:
   <<: *defaults
-  database: <%= @app_name %>_test
+  database: <%= @app_name.downcase %>_test
 

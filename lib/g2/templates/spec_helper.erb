@@ -8,18 +8,20 @@ Goliath.env = :test
 require File.expand_path('../../script/server', __FILE__)
 
 module ApiTestHelper
-  def get path, params={}, &block
-    with_api Boot, params do
-      get_request path: path do |c|
-        block.call c
+  def get path, params={}, options={}, &block
+    with_api Boot, options do
+      get_request path: path, query: params do |c|
+        json = JSON.parse c.response, symbolize_names: true
+        block.call c, json
       end
     end
   end
 
-  def post path, params={}, &block
-    with_api Boot, params do
-      get_request path: path do |c|
-        block.call c
+  def post path, params={}, options={}, &block
+    with_api Boot, options do
+      post_request path: path, body: params do |c|
+        json = JSON.parse c.response, symbolize_names: true
+        block.call c, json
       end
     end
   end

@@ -1,4 +1,5 @@
 require "thor"
+require "active_support/inflector"
 
 module G2
   class Cli < Thor

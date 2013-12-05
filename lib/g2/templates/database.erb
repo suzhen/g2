@@ -1,0 +1,16 @@
+defaults: &defaults
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  host: localhost
+  username: root
+  password: root
+
+development:
+  <<: *defaults
+  database: gog2_development
+
+test:
+  <<: *defaults
+  database: gog2_test
+

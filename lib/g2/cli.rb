@@ -6,7 +6,7 @@ module G2
 
     source_root File.dirname(__FILE__)
 
-    desc "new", "create a new grape goliath application"
+    desc "new [app]", "create a new grape goliath application"
     def new app_root
       say "create a new grape goliath application named #{app_root}", :green
       @app_name = app_root.capitalize
@@ -19,8 +19,10 @@ module G2
       # create basic files
       {
         application: "config/application.rb",
+        database: "config/database.yml",
         spec_helper: "spec/spec_helper.rb",
         gemfile: "Gemfile",
+        guardfile: "Guardfile",
         rakefile: "Rakefile",
         rspec_config: ".rspec",
         server: "script/server.rb"
@@ -33,13 +35,13 @@ module G2
       end
     end
 
-    desc "server", "start goliath server"
+    desc "s [options]", "start goliath server"
     method_option :port, :aliases => "-p", :desc => "server port"
     method_option :environment, :aliases => "-e", :desc => "server environment"
     method_option :pid, :aliases => "-P", :desc => "server pid path"
     method_option :log, :aliases => "-l", :desc => "server log path"
     method_option :daemon, :aliases => "-d", :desc => "run server as daemon"
-    def server
+    def s
       command = "ruby script/server.rb -p #{options[:port] || 3030} -e #{options[:environment] || 'development'}"
 
       if options[:log]
@@ -57,12 +59,14 @@ module G2
       exec command
     end
 
-    desc "console", "start console"
-    def console
+    desc "c", "start console"
+    def c
+      say "not implemented yet ):", :yellow
     end
 
-    desc "generator", "generate files"
-    def generate
+    desc "g", "generate files"
+    def g
+      say "not implemented yet ):", :yellow
     end
 
   end

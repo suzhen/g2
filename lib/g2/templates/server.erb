@@ -1,9 +1,68 @@
 require "rubygems"
 require "bundler/setup"
+
 require "active_support"
-require 'goliath'
-require 'em-synchrony/activerecord'
-require 'grape'
+require "grape"
+require "goliath"
+require "em-synchrony/activerecord"
+require 'yaml'
+require 'mysql2'
+
+require "pry"
+
+class G2
+  def self.config
+    @instance ||= G2.new
+  end
+
+  def self.env
+    Goliath.env
+  end
+
+  def root_dir
+    @root_dir ||= File.expand_path("../..", __FILE__)
+  end
+
+  def app_dir
+    @app_dir ||= File.join(root_dir, "app")
+  end
+
+  def config_dir
+    @config_dir ||= File.join(root_dir, "config")
+  end
+
+  def app_resources
+    @app_resources ||= load_resources
+  end
+
+  private
+
+  def load_resources
+    app_resources = { }
+
+    [:apis, :helpers, :models].each do |item|
+      app_resources[item] = []
+
+      Dir.foreach(File.join(app_dir, item.to_s)) do |entry|
+        next if entry == "." || entry == ".."
+        if entry.end_with?("rb")
+          file_name = entry.split(".rb").first.camelize
+          require entry
+
+          app_resources[item] << file_name.constantize
+        end
+      end
+    end
+
+    app_resources
+  end
+
+end
+
+%w{apis helpers models}.each do |dir|
+  $LOAD_PATH.unshift File.join(G2.config.app_dir, dir)
+end
+$LOAD_PATH.unshift G2.config.config_dir
 
 Goliath::Request.log_block = proc do |env, response, elapsed_time|
   request_params = env.params.collect { |param| param.join(": ") }
@@ -14,7 +73,7 @@ Goliath::Request.log_block = proc do |env, response, elapsed_time|
   env[Goliath::Request::RACK_LOGGER].info("#{response.status} #{method} #{path} in #{'%.2f' % elapsed_time} ms")
 end
 
-require File.expand_path('../../config/application', __FILE__)
+require "application"
 
 class Boot < Goliath::API
   use Goliath::Rack::Params

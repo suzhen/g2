@@ -1,0 +1,31 @@
+require "goliath"
+require "goliath/test_helper"
+require "json"
+require "pry"
+
+Goliath.env = :test
+
+require File.expand_path('../../script/server', __FILE__)
+
+module ApiTestHelper
+  def get path, params={}, &block
+    with_api Boot, params do
+      get_request path: path do |c|
+        block.call c
+      end
+    end
+  end
+
+  def post path, params={}, &block
+    with_api Boot, params do
+      get_request path: path do |c|
+        block.call c
+      end
+    end
+  end
+end
+
+RSpec.configure do |c|
+  c.include Goliath::TestHelper
+  c.include ApiTestHelper
+end

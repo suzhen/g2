@@ -8,9 +8,9 @@ defaults: &defaults
 
 development:
   <<: *defaults
-  database: gog2_development
+  database: <%= @app_name %>_development
 
 test:
   <<: *defaults
-  database: gog2_test
+  database: <%= @app_name %>_test
 

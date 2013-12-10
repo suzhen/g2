@@ -62,7 +62,12 @@ module G2
 
     desc "c", "start console"
     def c
-      say "not implemented yet ):", :yellow
+      puts "starting console ..."
+      require "pry"
+      require "awesome_print"
+      require "./script/server"
+      Pry.start
+      puts ""
     end
 
     desc "g", "generate files"
@@ -85,6 +90,7 @@ module G2
 
     def generate_model name, *args
       template "templates/generator/model.erb", File.join('app/models', "#{name}.rb")
+      template "templates/generator/migration.erb", File.join('db/migrate', "#{Time.now.to_i}_#{name}.rb")
     end
 
     def generate_migration name, *args

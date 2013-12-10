@@ -22,4 +22,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "thor"
   spec.add_runtime_dependency "activesupport"
   spec.add_runtime_dependency "rake"
+  spec.add_runtime_dependency "pry"
+  spec.add_runtime_dependency "awesome_print"
 end

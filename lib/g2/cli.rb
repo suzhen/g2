@@ -13,7 +13,7 @@ module G2
       @app_name = app_root.capitalize
 
       # create folder structure
-      %w{app app/apis app/helpers app/models config config/environments db script log tmp spec spec/apis spec/models spec/helpers}.each do |item|
+      %w{app app/apis app/helpers app/models config config/environments db lib script log tmp spec spec/apis spec/models spec/helpers}.each do |item|
         empty_directory app_root + "/" + item
       end
 

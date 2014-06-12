@@ -2,6 +2,7 @@ require "rubygems"
 require "bundler/setup"
 
 require "active_support"
+require "active_support/dependencies"
 require "grape"
 require "goliath"
 require "em-synchrony/activerecord"
@@ -11,8 +12,11 @@ require 'mysql2'
 require "pry"
 
 class G2
+   
+  private_class_method :new 
+   
   def self.config
-    @instance ||= G2.new
+    @instance ||= new
   end
 
   def self.env
@@ -26,6 +30,11 @@ class G2
   def app_dir
     @app_dir ||= File.join(root_dir, "app")
   end
+
+  def lib_dir
+    @lib_dir ||= File.join(root_dir, "lib")
+  end
+
 
   def config_dir
     @config_dir ||= File.join(root_dir, "config")
@@ -63,6 +72,10 @@ end
   $LOAD_PATH.unshift File.join(G2.config.app_dir, dir)
 end
 $LOAD_PATH.unshift G2.config.config_dir
+
+ActiveSupport::Dependencies.autoload_paths << File.expand_path('../lib', __FILE__)
+
+
 
 Goliath::Request.log_block = proc do |env, response, elapsed_time|
   request_params = env.params.collect { |param| param.join(": ") }
